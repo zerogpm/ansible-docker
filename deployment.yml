@@ -1,0 +1,33 @@
+---
+
+- hosts: all
+
+  vars:
+    web_data: www-data
+    gen_passwd: "ubuntu!@t"
+
+  tasks:
+    - name: Delete content & directory
+      file:
+        state: absent
+        path: /home/ubuntu/my_app
+
+    - git:
+        repo: git@github.com:zerogpm/test-redis.git
+        dest: /home/ubuntu/my_app
+        version: "master"
+        accept_hostkey: yes
+
+    - name: Install packages based on package.json using the npm
+      npm:
+        path: "/home/ubuntu/my_app"
+        state: present
+
+    - name: Restart myapp, in all cases
+      pm2:
+        name: index
+        state: restarted
+#    - name: Run command if /path/to/database does not exist (with 'cmd' parameter)
+#      ansible.builtin.command:
+#        chdir: /home/ubuntu/my_app
+#        cmd: npm install
