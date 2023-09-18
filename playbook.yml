@@ -1,10 +1,10 @@
 ---
 
 - hosts: all
+  become: yes
 
   vars:
-    web_data: www-data
-    gen_passwd: "azureuser!@t"
+    version: "v2.20.3"
 
   tasks:
 
@@ -38,7 +38,7 @@
       delay: 10
       retries: 300
 
-    # sudo groupadd docker
+    sudo groupadd docker
     - name: Create "docker" group
       group:
         name: "docker"
@@ -51,4 +51,21 @@
         append: yes
 
     - name: restart the docker services
-      command: service docker restart
+      command: "service docker restart"
+
+    - name: download docker demon
+      command: "curl -SL https://github.com/docker/compose/releases/download/{{version}}/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose"
+      async: 2100
+      poll: 0
+      register: compose
+
+    - name: Check if docker compose is complete
+      async_status:
+         jid: "{{ compose.ansible_job_id }}"
+      register: job_result
+      until: job_result.finished
+      delay: 10
+      retries: 300
+      
+    - name: make it excuteable
+      command: "chmod +x /usr/local/bin/docker-compose"
