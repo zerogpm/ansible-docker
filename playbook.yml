@@ -8,64 +8,6 @@
 
   tasks:
 
-    - name: Upgrade APT Package Manager repositories cache
-      become: true
-      apt:
-        update_cache: yes
-
-    - name: Install aptitude
-      become: true
-      apt:
-        name: aptitude
-
-    - name: Create a login user
-      user:
-        name: ubuntu
-        password: "{{gen_passwd |  password_hash('sha512')}}"
-        groups:
-          - sudo
-        state: present
-        shell: /bin/bash
-        system: no
-        create_home: yes
-
-    - name: Replace sudo file
-      become: true
-      copy:
-        src: /Users/jiansu/Code/do-disable-root/template/sudoers
-        dest: /etc/sudoers
-        owner: root
-        group: root
-        mode: '0400'
-
-    - name: create ssh folder
-      file:
-        path: /home/ubuntu/.ssh
-        state: directory
-        mode: '0755'
-        owner: ubuntu
-        group: ubuntu
-
-#    - name: generate SSH key
-#      openssh_keypair:
-#        path: "/home/ubuntu/.ssh/rd_rsa"
-#        type: rsa
-#        size: 4096
-#        group: ubuntu
-#        owner: ubuntu
-#        state: present
-#        force: no
-
-    # - name: copy authorized_keys
-    #   command: cp /root/.ssh/authorized_keys /home/ubuntu/.ssh/
-
-    # - name: set user ownership for authorized_keys
-    #   file:
-    #     path: /home/ubuntu/.ssh/authorized_keys
-    #     state: file
-    #     owner: ubuntu
-    #     group: ubuntu
-
     - name: download docker demon
       command: curl -fsSL https://get.docker.com -o get-docker.sh
 
@@ -110,14 +52,3 @@
 
     - name: restart the docker services
       command: service docker restart
-
-#    - name: disable root login in the Droplet
-#      replace:
-#        path: /etc/ssh/sshd_config
-#        regexp: 'PermitRootLogin yes'
-#        replace: 'PermitRootLogin no'
-#
-#    - name: restart ssh services
-#      service:
-#        name: ssh
-#        state: restarted
