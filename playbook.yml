@@ -4,7 +4,7 @@
 
   vars:
     web_data: www-data
-    gen_passwd: "ubuntu!@t"
+    gen_passwd: "azureuser!@t"
 
   tasks:
 
@@ -12,19 +12,19 @@
       command: curl -fsSL https://get.docker.com -o get-docker.sh
 
     - name: move get-docker.sh
-      command: mv /root/get-docker.sh /home/ubuntu
+      command: mv /root/get-docker.sh /home/azureuser
 
     - name: change docker.sh own
       file:
-        path: /home/ubuntu/get-docker.sh
+        path: /home/azureuser/get-docker.sh
         state: file
         mode: '0700'
-        owner: ubuntu
-        group: ubuntu
+        owner: azureuser
+        group: azureuser
 
 
     - name: install docker demon
-      shell: /home/ubuntu/get-docker.sh
+      shell: /home/azureuser/get-docker.sh
       async: 2100
       poll: 0
       register: docker
@@ -44,9 +44,9 @@
         name: "docker"
         state: present
 
-    - name: add remote ubuntu user to docker group
+    - name: add remote azureuser user to docker group
       user:
-        name: "ubuntu"
+        name: "azureuser"
         groups: "docker"
         append: yes
 
