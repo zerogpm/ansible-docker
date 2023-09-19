@@ -11,9 +11,6 @@
     - name: download docker demon
       command: curl -fsSL https://get.docker.com -o get-docker.sh
 
-    - name: move get-docker.sh
-      command: mv /root/get-docker.sh /home/azureuser
-
     - name: change docker.sh own
       file:
         path: /home/azureuser/get-docker.sh
@@ -38,7 +35,6 @@
       delay: 10
       retries: 300
 
-    sudo groupadd docker
     - name: Create "docker" group
       group:
         name: "docker"
