@@ -49,13 +49,13 @@
     - name: restart the docker services
       command: "service docker restart"
 
-    - name: download docker demon
+    - name: Download Docker Compose
       command: "curl -SL https://github.com/docker/compose/releases/download/{{version}}/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose"
       async: 2100
       poll: 0
       register: compose
 
-    - name: Check if docker compose is complete
+    - name: Make Docker Compose executable
       async_status:
          jid: "{{ compose.ansible_job_id }}"
       register: job_result
