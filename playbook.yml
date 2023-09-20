@@ -55,7 +55,7 @@
       poll: 0
       register: compose
 
-    - name: Make Docker Compose executable
+    - name: wait for the job
       async_status:
          jid: "{{ compose.ansible_job_id }}"
       register: job_result
@@ -63,5 +63,5 @@
       delay: 10
       retries: 300
       
-    - name: make it excuteable
+    - name: make it executable
       command: "chmod +x /usr/local/bin/docker-compose"
